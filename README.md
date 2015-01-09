@@ -1,2 +1,3 @@
-# exmig
-Yii2 Extended Migration
+# ExMig - Yii2 Extended Migration
+
+@TODO Сделать описание работы...
