@@ -1,0 +1,22 @@
+{
+    "name":"iiifx/yii2-exmig",
+    "type": "library",
+    "description": "ExMig - Yii2 Extended Migration",
+    "keywords": ["yii2","migration"],
+    "homepage": "https://github.com/iiifx/yii2-exmig.git",
+    "version": "1.0.0",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Vitaliy IIIFX Khomenko",
+            "email": "iiifx@yandex.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": { "ExMig\\": "source/" }
+    }
+}
