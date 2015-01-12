@@ -4,7 +4,6 @@ namespace Exmig;
 
 use Yii;
 use yii\base\ErrorException;
-use yii\base\Exception;
 
 class Migration extends migration\BaseMigration {
 
@@ -30,13 +29,13 @@ class Migration extends migration\BaseMigration {
      * Получить название таблицы без шаблона префикса
      *
      * @return string
-     * @throws Exception
+     * @throws ErrorException
      */
     protected function getTableName () {
         if ( is_string( $this->tableName ) && $this->tableName ) {
             return $this->tableName;
         }
-        throw new Exception( '{$this->tableName} must contain the name of the table' );
+        throw new ErrorException( '{$this->tableName} must contain the name of the table' );
     }
 
     /**
@@ -127,7 +126,6 @@ class Migration extends migration\BaseMigration {
      * @param string $fieldName
      *
      * @return string
-     * @throws Exception
      */
     protected function buildForeignKeyName ( $referenceTable, $fieldName ) {
         # Формируем название индекса
