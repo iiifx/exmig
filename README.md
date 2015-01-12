@@ -51,8 +51,8 @@ class m141007_065000_CREATE_language extends Exmig\Migration {
 ```
 
 
-Пример и описание новых методов:
---------------------------------
+Пример и описание методов:
+--------------------------
 
 ##### Exmig\Migration::createEntityTable ( $customFieldList = [] )
 
@@ -87,7 +87,6 @@ AUTO_INCREMENT=1;
 
 Быстрое удаление текущей таблицы
 
-Пример использования:
 ```php
 $this->dropCurrentTable();
 ```
@@ -96,7 +95,6 @@ $this->dropCurrentTable();
 
 Быстрое создание индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "K_fieldName"
 
-Пример использования:
 ```php
 $this->createIndexKey( 'is_active' );
 ```
@@ -105,7 +103,6 @@ $this->createIndexKey( 'is_active' );
 
 Быстрое создание уникального индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "U_fieldName"
 
-Пример использования:
 ```php
 $this->createUniqueKey( 'post_id' );
 ```
@@ -122,4 +119,25 @@ $this->createForeignKey( 'user', 'user_id' );
 Пример использования с изменением параметров:
 ```php
 $this->createForeignKey( 'category', 'category_id', 'cat_id', 'SET NULL', 'CASCADE' );
+```
+
+Общие методы вывода в консоль:
+------------------------
+
+##### ::output ( $string = NULL )
+
+Производит вывод строки в консоль. Строка автоматически дополняется переходом на новую
+
+```php
+$this->output( 'Message...' );
+```
+
+##### ::stdout ( $string )
+
+Производит вывод строки в консоль
+
+```php
+$this->stdout( 'Hello' );
+$this->stdout( ' ' );
+$this->stdout( 'world' );
 ```
