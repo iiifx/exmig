@@ -50,10 +50,11 @@ class m141007_065000_CREATE_language extends Exmig\Migration {
 }
 ```
 
+
 Пример и описание новых методов:
 --------------------------------
 
-### Exmig\Migration::createEntityTable ( $customFieldList = [] )
+##### Exmig\Migration::createEntityTable ( $customFieldList = [] )
 
 Создание таблицы сущности, в которой автоматически создается PK и TIMESTAMPS.
 
@@ -77,3 +78,14 @@ COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1;
 ```
+
+* Использование двух TIMESTAMP в одной таблице требует версию MySQL не ниже 5.6
+* Миграция также использует системные настройки, потому имя таблицы было создано как "fd_language", т.к. в системе установлен префикс для имен таблиц - "fd_"
+
+
+##### Exmig\Migration::dropCurrentTable ()
+
+Быстрое удаление текущей таблицы
+
+
+##### Exmig\Migration::dropCurrentTable ()
