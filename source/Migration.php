@@ -1,81 +1,103 @@
 <?php
 
-namespace ExMig;
+namespace Exmig;
 
 use Yii;
+use yii\base\ErrorException;
+use yii\base\Exception;
 
 class Migration extends migration\BaseMigration {
 
     /**
-     * Название таблицы, без префикса. Указывается в миграции
+     * Название таблицы, должно быть указано в миграции
      *
      * @var string
      */
-    protected $tableName;
+    public $tableName;
 
     /**
-     * Префикс таблиц, с конфига приложения. Заполняется автоматически
+     * Шаблон определения названия таблицы с установленным шаблоном префикса
      *
      * @var string
      */
-    protected $tablePrefix;
+    public $tableNamePattern = '/{{%[a-zA-Z0-9-_]{1,64}}}/';
 
-    /**
-     * Полное название таблицы, с префиксом. Заполняется автоматически
-     *
-     * @var string
+    /*
+     *** Внутренние хелперы ***
      */
-    protected $tableNameFull;
 
     /**
-     * Манипуляции с данными перед стартом миграции
-     *
-     * @throws \Exception
-     */
-    public function init () {
-        parent::init();
-        $this->tablePrefix = ( Yii::$app->db->tablePrefix ) ? Yii::$app->db->tablePrefix : '';
-        $this->tableNameFull = "{$this->tablePrefix}{$this->tableName}";
-    }
-
-    /**
-     * Хелпер для создания названия FK индекса
-     *
-     * @param string $referenceTable
+     * Получить название таблицы без шаблона префикса
      *
      * @return string
+     * @throws Exception
      */
-    public function buildForeignKeyName ( $referenceTable ) {
-        return "FK_{$this->tableNameFull}_2_{$this->tablePrefix}{$referenceTable}";
+    protected function getTableName () {
+        if ( is_string( $this->tableName ) && $this->tableName ) {
+            return $this->tableName;
+        }
+        throw new Exception( '{$this->tableName} must contain the name of the table' );
     }
 
     /**
-     * Хелпер для создания расширенного названия FK индекса, с участием названия поля
+     * Получить название таблицы с шаблоном префикса
      *
-     * @param string $referenceTable
+     * @return string
+     * @throws ErrorException
+     */
+    protected function getTableNameWithPrefix () {
+        return $this->buildTableNameWithPrefix( $this->getTableName() );
+    }
+
+    /**
+     * Создать название таблицы с шаблоном префикса
+     *
+     * @param string $tableName
+     *
+     * @return string
+     * @throws ErrorException
+     */
+    protected function buildTableNameWithPrefix ( $tableName = '' ) {
+        if ( is_string( $tableName ) && $tableName ) {
+            $matches = preg_match( $this->tableNamePattern, $tableName );
+            if ( $matches === 0 ) {
+                return "{{%{$tableName}}}";
+            } elseif ( $matches === 1 ) {
+                return $tableName;
+            }
+            throw new ErrorException( 'Incorrect template: {$this->tableNamePattern}' );
+        }
+        throw new ErrorException( 'The table name must be a string and must not be empty' );
+    }
+
+    /*
+     *** Работа с индексами ***
+     */
+
+    /**
+     * Создать индекс
+     *
      * @param string $fieldName
-     *
-     * @return string
      */
-    public function buildForeignKeyExtraName ( $referenceTable, $fieldName ) {
-        # Формируем название внешнего ключа
-        $name = "FK_{$this->tableNameFull}_2_{$this->tablePrefix}{$referenceTable}__{$fieldName}";
-        # Проверяем длину
-        if ( strlen( $name ) <= 64 ) {
-            return $name;
+    public function createIndexKey ( $fieldName ) {
+        if ( is_string( $fieldName ) && strlen( $fieldName ) ) {
+            $this->createIndex( "K_{$fieldName}", $this->getTableNameWithPrefix(), $fieldName, FALSE );
         }
-        # Генерируем короткий вариант
-        $nameHashTail = "FK_{$this->tableNameFull}_2_{$this->tablePrefix}{$referenceTable}__" . hash( 'crc32', $fieldName );
-        # Проверяем длину
-        if ( strlen( $nameHashTail ) <= 64 ) {
-            return $nameHashTail;
-        }
-        # Оба варианта слишком длинные, делам самый короткий вариант
-        return 'FK_' . hash( 'crc32', "{$this->tableNameFull}_2_{$this->tablePrefix}{$referenceTable}__{$fieldName}" );
     }
 
     /**
-     * Хелпер для быстрого создания FK индекса
+     * Создать уникальный индекс
+     *
+     * @param string $fieldName
+     */
+    public function createUniqueKey ( $fieldName ) {
+        if ( is_string( $fieldName ) && strlen( $fieldName ) ) {
+            $this->createIndex( "U_{$fieldName}", $this->getTableNameWithPrefix(), $fieldName, TRUE );
+        }
+    }
+
+    /**
+     * Создать FK индекс, внешний ключ
      *
      * @param string $referenceTable
      * @param string $currentField
@@ -83,65 +105,67 @@ class Migration extends migration\BaseMigration {
      * @param string $deleteType
      * @param string $updateType
      *
-     * @internal param string $type
+     * @throws ErrorException
      */
     public function createForeignKey ( $referenceTable, $currentField, $referenceField = 'id', $deleteType = 'CASCADE', $updateType = 'CASCADE' ) {
         $this->addForeignKey(
-            $this->buildForeignKeyExtraName( $referenceTable, $currentField ),
-            "{{%{$this->tableName}}}", $currentField,
-            "{{%{$referenceTable}}}", $referenceField,
+            $this->buildForeignKeyName( $referenceTable, $currentField ),
+            $this->getTableNameWithPrefix(), $currentField,
+            $this->buildTableNameWithPrefix( $referenceTable ), $referenceField,
             $deleteType, $updateType
         );
     }
 
-    /**
-     * Хелпер для быстрого создания KEYиндекса
-     *
-     * @param string|array $fieldName
+    /*
+     *** Работа с названиями ***
      */
-    public function createIndexKey ( $fieldName ) {
-        if ( is_array( $fieldName ) ) {
-            $indexName = implode( '_', $fieldName );
-        } else {
-            $indexName = $fieldName;
-        }
-        $this->createIndex( "KEY_{$indexName}", "{{%{$this->tableName}}}", $fieldName, FALSE );
-    }
 
     /**
-     * Хелпер для быстрого создания UNIQUE индекса
+     * Создать имя FK ключа
      *
+     * @param string $referenceTable
      * @param string $fieldName
+     *
+     * @return string
+     * @throws Exception
      */
-    public function createUniqueKey ( $fieldName ) {
-        $this->createIndex( "UNIQUE_{$fieldName}", "{{%{$this->tableName}}}", $fieldName, TRUE );
+    protected function buildForeignKeyName ( $referenceTable, $fieldName ) {
+        # Формируем название индекса
+        $name = "FK_{$this->getTableName()}_2_{$referenceTable}__{$fieldName}";
+        # Проверяем длину, она не должна быть больше 64 символов
+        if ( strlen( $name ) <= 64 ) {
+            return $name;
+        }
+        # Генерируем короткий вариант, с хэшем вместо полного названия таблиц
+        return 'FK_' . hash( 'crc32', "FK_{$this->getTableName()}_2_{$referenceTable}__{$fieldName}" );
     }
 
-    /**
-     * Расширенный вариант создания таблицы. Сам добавляет ID и DATE_*, а также utf8_general_ci и InnoDB
-     *
-     * @param array $fieldList
+    /*
+     *** Работа с таблицами ***
      */
-    public function createEntityTable ( $fieldList ) {
-        $fieldListFull = array (
+
+    /**
+     * Создать таблицу сущности
+     *
+     * @param array $customFieldList
+     */
+    public function createEntityTable ( $customFieldList = [] ) {
+        $fieldList = array (
             'id' => 'pk'
         );
-        foreach ( $fieldList as $fieldName => $fieldParams ) {
-            $fieldListFull[ $fieldName ] = $fieldParams;
+        foreach ( $customFieldList as $fieldName => $fieldParams ) {
+            $fieldList[ $fieldName ] = $fieldParams;
         }
-        $fieldListFull[ 'date_created' ] = "TIMESTAMP NOT NULL DEFAULT NOW()";
-        $fieldListFull[ 'date_edited' ] = "TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE NOW()";
-        $this->createTable( "{{%{$this->tableName}}}", $fieldListFull, "
-            COLLATE='utf8_general_ci'
-            ENGINE=InnoDB"
-        );
+        $fieldList[ 'date_created' ] = "TIMESTAMP NOT NULL DEFAULT NOW()";
+        $fieldList[ 'date_edited' ] = "TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE NOW()";
+        $this->createTable( $this->getTableNameWithPrefix(), $fieldList, "COLLATE='utf8_general_ci' ENGINE=InnoDB" );
     }
 
     /**
-     * Быстрый вариант дропа таблицы
+     * Уничтожить текущую таблицу
      */
     public function dropCurrentTable () {
-        $this->dropTable( "{{%{$this->tableName}}}" );
+        $this->dropTable( $this->getTableNameWithPrefix() );
     }
 
 }
