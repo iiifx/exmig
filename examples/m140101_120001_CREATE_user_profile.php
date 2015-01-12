@@ -1,6 +1,6 @@
 <?php
 
-class m141007_072426_CREATE_user_profile extends \Exmig\Migration {
+class m140101_120001_CREATE_user_profile extends \Exmig\Migration {
 
     public $tableName = 'user_profile';
 
