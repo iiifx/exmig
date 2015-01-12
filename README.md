@@ -27,7 +27,7 @@ table_name - название таблицы
 ----------------
 
 ```php
-class m141007_065000_CREATE_language extends Exmig\Migration {
+class m141007_065000_CREATE_language extends iiifx\Exmig\Migration {
 
     public $tableName = 'language'; # Название таблицы, с которой работает миграция
 
@@ -54,7 +54,7 @@ class m141007_065000_CREATE_language extends Exmig\Migration {
 Пример и описание методов:
 --------------------------
 
-##### Exmig\Migration::createEntityTable ( $customFieldList = [] )
+##### iiifx\Exmig\Migration::createEntityTable ( $customFieldList = [] )
 
 Создание таблицы сущности, в которой автоматически создается PK и TIMESTAMPS.
 
@@ -83,7 +83,7 @@ AUTO_INCREMENT=1;
 * Миграция также использует системные настройки, потому имя таблицы было создано как "fd_language" с использованием префикса для имен таблиц "fd_"
 
 
-##### Exmig\Migration::dropCurrentTable ()
+##### iiifx\Exmig\Migration::dropCurrentTable ()
 
 Быстрое удаление текущей таблицы
 
@@ -91,7 +91,7 @@ AUTO_INCREMENT=1;
 $this->dropCurrentTable();
 ```
 
-##### Exmig\Migration::createIndexKey ( $fieldName )
+##### iiifx\Exmig\Migration::createIndexKey ( $fieldName )
 
 Быстрое создание индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "K_fieldName"
 
@@ -99,7 +99,7 @@ $this->dropCurrentTable();
 $this->createIndexKey( 'is_active' );
 ```
 
-##### Exmig\Migration::createUniqueKey ( $fieldName )
+##### iiifx\Exmig\Migration::createUniqueKey ( $fieldName )
 
 Быстрое создание уникального индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "U_fieldName"
 
@@ -107,7 +107,7 @@ $this->createIndexKey( 'is_active' );
 $this->createUniqueKey( 'post_id' );
 ```
 
-##### Exmig\Migration::createForeignKey ( $referenceTable, $currentField, $referenceField = 'id', $deleteType = 'CASCADE', $updateType = 'CASCADE' )
+##### iiifx\Exmig\Migration::createForeignKey ( $referenceTable, $currentField, $referenceField = 'id', $deleteType = 'CASCADE', $updateType = 'CASCADE' )
 
 Быстрое создание внешнего ключа для текущей таблицы. Название идекса формируется автоматически в формате "FK_tableName_2_referenceTable__fieldName".
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Exmig\migration;
+namespace iiifx\Exmig\migration;
 
 use yii\db\Migration;
 use yii\helpers\Console;
