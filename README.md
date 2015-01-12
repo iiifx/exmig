@@ -54,7 +54,7 @@ class m141007_065000_CREATE_language extends Exmig\Migration {
 Пример и описание новых методов:
 --------------------------------
 
-##### Exmig\Migration::createEntityTable ( $customFieldList = [] )
+#### Exmig\Migration::createEntityTable ( $customFieldList = [] )
 
 Создание таблицы сущности, в которой автоматически создается PK и TIMESTAMPS.
 
@@ -80,12 +80,46 @@ AUTO_INCREMENT=1;
 ```
 
 * Использование двух TIMESTAMP в одной таблице требует версию MySQL не ниже 5.6
-* Миграция также использует системные настройки, потому имя таблицы было создано как "fd_language", т.к. в системе установлен префикс для имен таблиц - "fd_"
+* Миграция также использует системные настройки, потому имя таблицы было создано как "fd_language" с использованием префикса для имен таблиц "fd_"
 
 
-##### Exmig\Migration::dropCurrentTable ()
+#### Exmig\Migration::dropCurrentTable ()
 
 Быстрое удаление текущей таблицы
 
+Пример использования:
+```php
+$this->dropCurrentTable();
+```
 
-##### Exmig\Migration::dropCurrentTable ()
+#### Exmig\Migration::createIndexKey ( $fieldName = '' )
+
+Быстрое создание индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "K_fieldName"
+
+Пример использования:
+```php
+$this->createIndexKey( 'is_active' );
+```
+
+#### Exmig\Migration::createUniqueKey ( $fieldName = '' )
+
+Быстрое создание уникального индекса для поля текущей таблицы. Название идекса формируется автоматически в формате "U_fieldName"
+
+Пример использования:
+```php
+$this->createUniqueKey( 'post_id' );
+```
+
+#### Exmig\Migration::createForeignKey ( $referenceTable, $currentField, $referenceField = 'id', $deleteType = 'CASCADE', $updateType = 'CASCADE' )
+
+Быстрое создание внешнего ключа для текущей таблицы. Название идекса формируется автоматически в формате "FK_tableName_2_referenceTable__fieldName".
+
+Пример быстрого использования:
+```php
+$this->createForeignKey( 'user', 'user_id' );
+```
+
+Пример использования с изменением параметров:
+```php
+$this->createForeignKey( 'category', 'category_id', 'cat_id', 'SET NULL', 'CASCADE' );
+```
