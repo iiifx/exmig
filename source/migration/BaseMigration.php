@@ -1,6 +1,6 @@
 <?php
 
-namespace ExMig\migration;
+namespace Exmig\migration;
 
 use yii\db\Migration;
 

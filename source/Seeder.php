@@ -1,6 +1,6 @@
 <?php
 
-namespace ExMig;
+namespace Exmig;
 
 use Yii;
 use yii\base\ErrorException;
