@@ -52,3 +52,28 @@ class m141007_065000_CREATE_language extends Exmig\Migration {
 
 Пример и описание новых методов:
 --------------------------------
+
+### Exmig\Migration::createEntityTable ( $customFieldList = [] )
+
+Создание таблицы сущности, в которой автоматически создается PK и TIMESTAMPS.
+
+К примеру, при использовании:
+```php
+$this->createEntityTable( [
+    'string' => "VARCHAR(255) NOT NULL DEFAULT ''",
+] );
+```
+
+будет создана таблица с такой структурой:
+```sql
+CREATE TABLE `fd_language` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `string` VARCHAR(255) NOT NULL DEFAULT '',
+    `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_edited` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1;
+```
