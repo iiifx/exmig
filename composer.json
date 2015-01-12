@@ -5,7 +5,6 @@
     "keywords": ["yii2","migration"],
     "homepage": "https://github.com/iiifx/yii2-exmig.git",
     "license": "BSD-3-Clause",
-    "version": "0.1.1",
     "authors": [
         { "name": "Vitaliy IIIFX Khomenko", "email": "iiifx@yandex.com" }
     ],
