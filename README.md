@@ -70,8 +70,8 @@ $this->createEntityTable( [
 CREATE TABLE `fd_language` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `string` VARCHAR(255) NOT NULL DEFAULT '',
-    `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `date_edited` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_created` TIMESTAMP NOT NULL DEFAULT NOW(),
+    `date_edited` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE NOW(),
     PRIMARY KEY (`id`)
 )
 COLLATE='utf8_general_ci'
