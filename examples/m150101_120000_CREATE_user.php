@@ -1,6 +1,6 @@
 <?php
 
-class m140101_120000_CREATE_user extends \iiifx\Exmig\Migration {
+class m150101_120000_CREATE_user extends \iiifx\Exmig\Migration {
 
     # Название таблицы сущности User
     public $tableName = 'user';

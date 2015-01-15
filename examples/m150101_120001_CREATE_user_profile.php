@@ -1,6 +1,6 @@
 <?php
 
-class m140101_120001_CREATE_user_profile extends \iiifx\Exmig\Migration {
+class m150101_120001_CREATE_user_profile extends \iiifx\Exmig\Migration {
 
     # Название таблицы связанной сущности UserProfile
     public $tableName = 'user_profile';
