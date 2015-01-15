@@ -29,4 +29,15 @@ class BaseMigration extends Migration {
         return Console::stdout( $string );
     }
 
+    /**
+     * Вывод в консоль результата
+     *
+     * @param bool $result
+     *
+     * @return bool|int
+     */
+    public function showResult ( $result ) {
+        return Console::stdout( ( $result ) ? '+' : '-' );
+    }
+
 }
