@@ -76,23 +76,23 @@ class Migration extends migration\BaseMigration {
     /**
      * Создать индекс
      *
-     * @param string $fieldName
+     * @param string|array $fieldNames
      */
-    public function createIndexKey ( $fieldName ) {
-        if ( is_string( $fieldName ) && strlen( $fieldName ) ) {
-            $this->createIndex( "K_{$fieldName}", $this->getTableNameWithPrefix(), $fieldName, FALSE );
-        }
+    public function createIndexKey ( $fieldNames ) {
+        $fieldNames = (array) $fieldNames;
+        $indexName = 'K_' . implode( '_', $fieldNames );
+        $this->createIndex( $indexName, $this->getTableNameWithPrefix(), $fieldNames, FALSE );
     }
 
     /**
      * Создать уникальный индекс
      *
-     * @param string $fieldName
+     * @param string|string $fieldNames
      */
-    public function createUniqueKey ( $fieldName ) {
-        if ( is_string( $fieldName ) && strlen( $fieldName ) ) {
-            $this->createIndex( "U_{$fieldName}", $this->getTableNameWithPrefix(), $fieldName, TRUE );
-        }
+    public function createUniqueKey ( $fieldNames ) {
+        $fieldNames = (array) $fieldNames;
+        $indexName = 'U_' . implode( '_', $fieldNames );
+        $this->createIndex( $indexName, $this->getTableNameWithPrefix(), $fieldNames, TRUE );
     }
 
     /**
