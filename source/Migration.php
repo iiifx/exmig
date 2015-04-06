@@ -149,7 +149,7 @@ class Migration extends migration\BaseMigration {
      */
     public function createEntityTable ( $customFieldList = [] ) {
         $fieldList = array (
-            'id' => 'pk'
+            'id' => 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY'
         );
         foreach ( $customFieldList as $fieldName => $fieldParams ) {
             $fieldList[ $fieldName ] = $fieldParams;
