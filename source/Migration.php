@@ -146,15 +146,15 @@ class Migration extends migration\BaseMigration {
      * Создать таблицу сущности
      *
      * @param array $customFieldList
+     * @param bool  $addSortingPosition
      */
-    public function createEntityTable ( $customFieldList = [] ) {
-        $fieldList = array (
-            'id' => 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY'
-        );
-        foreach ( $customFieldList as $fieldName => $fieldParams ) {
-            $fieldList[ $fieldName ] = $fieldParams;
+    public function createEntityTable ( $customFieldList = [], $addSortingPosition = FALSE ) {
+        $fieldList = [ 'id' => 'INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY' ];
+        $fieldList = array_merge( $fieldList, $customFieldList );
+        if ( $addSortingPosition ) {
+            $fieldList[ 'sorting_position' ] = 'INT(11) UNSIGNED NOT NULL DEFAULT 0';
         }
-        $fieldList[ 'date_created' ] = "TIMESTAMP NOT NULL DEFAULT NOW()";
+        $fieldList[ 'date_created' ] = 'TIMESTAMP NOT NULL DEFAULT NOW()';
         $fieldList[ 'date_edited' ] = "TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE NOW()";
         $this->createTable( $this->getTableNameWithPrefix(), $fieldList, "COLLATE='utf8_general_ci' ENGINE=InnoDB" );
     }
