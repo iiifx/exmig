@@ -157,6 +157,7 @@ class Migration extends migration\BaseMigration {
         $fieldList[ 'date_created' ] = 'TIMESTAMP NOT NULL DEFAULT NOW()';
         $fieldList[ 'date_edited' ] = "TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE NOW()";
         $this->createTable( $this->getTableNameWithPrefix(), $fieldList, "COLLATE='utf8_general_ci' ENGINE=InnoDB" );
+        $this->createIndexKey( [ 'date_created', 'date_edited' ] );
     }
 
     /**
